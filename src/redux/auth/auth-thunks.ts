@@ -3,7 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import AuthService from "@/features/auth/services/auth-service.ts";
 import { loginSuccess } from '@/redux/auth/auth-slice';
 import { logout as logoutAction } from '@/redux/auth/auth-slice';
-import { LoginCredentials } from '@/shared/types';
+import {LoginCredentials} from "@/shared/interfaces";
 
 export const login = (credentials: LoginCredentials) => async (dispatch: Dispatch) => {
     try {
