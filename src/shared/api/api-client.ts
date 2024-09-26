@@ -1,28 +1,39 @@
-import axios, {AxiosInstance} from 'axios';
+// src/shared/api/api-client.ts
+import axios, { AxiosRequestConfig } from 'axios';
+import {StorageService} from "@/shared/services/storage-service.ts";
 
-const apiClient: AxiosInstance = axios.create({
+const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-apiClient.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
-
-apiClient.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('jwtToken');
-        }
-        return Promise.reject(error);
+const enrichRequestWithAuthHeader = (config: AxiosRequestConfig) => {
+    const token = StorageService.getToken();
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
+    return config;
+};
 
-export default apiClient;
+const get = (url: string, config: AxiosRequestConfig = {}) => {
+    return apiClient.get(url, enrichRequestWithAuthHeader(config));
+};
+
+const post = <T>(url: string, data?: any, config: AxiosRequestConfig = {}) => {
+    return apiClient.post<T>(url, data, enrichRequestWithAuthHeader(config));
+};
+
+const put = (url: string, data?: any, config: AxiosRequestConfig = {}) => {
+    return apiClient.put(url, data, enrichRequestWithAuthHeader(config));
+};
+
+const remove = (url: string, config: AxiosRequestConfig = {}) => {
+    return apiClient.delete(url, enrichRequestWithAuthHeader(config));
+};
+
+export const api = {
+    get,
+    post,
+    put,
+    delete: remove,
+};

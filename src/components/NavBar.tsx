@@ -13,9 +13,9 @@ import {routes} from "@/routes/routes.tsx";
 export function NavBar() {
     const isAuthorized = useSelector((state: RootState) => state.auth.isAuthorized);
 
-    const filteredRoutes = routes[0].children.filter((route) => {
-        return route.path !== "login" && isAuthorized;
-    });
+    const filteredRoutes = isAuthorized
+        ? routes[0].children.filter((route) => route.path !== "login")
+        : [];
 
     return (
         <NavigationMenu>

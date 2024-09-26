@@ -1,9 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {AuthState} from "@/shared/types";
+import {StorageService} from "@/shared/services/storage-service.ts";
+import {AuthState} from "@/shared/interfaces";
 
 const initialState: AuthState = {
-    isAuthorized: false,
-    token: null,
+    isAuthorized: !!StorageService.getToken(),
 };
 
 const authSlice = createSlice({
@@ -15,7 +15,6 @@ const authSlice = createSlice({
         },
         logout: (state) => {
             state.isAuthorized = false;
-            localStorage.removeItem('jwtToken');
         },
     }
 });
