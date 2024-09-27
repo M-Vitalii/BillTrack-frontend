@@ -3,8 +3,3 @@ export interface DepartmentPage {
     page: number;
     pageSize: number;
 }
-
-export interface Department {
-    id?: string;
-    name: string;
-}

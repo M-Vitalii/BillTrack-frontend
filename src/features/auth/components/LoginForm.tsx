@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/features/auth/validations/login-form-schema";
-import {LoginCredentials} from "@/shared/interfaces";
+import { LoginCredentials } from "@/shared/interfaces";
+import {ButtonLoading} from "@/components/ButtonLoading.tsx";
 
 interface LoginFormProps {
     onSubmit: (credentials: LoginCredentials) => void;
+    isLoading: boolean; // Add isLoading prop
 }
 
-export function LoginForm({ onSubmit }: LoginFormProps) {
+export function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -44,13 +46,17 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Password" {...field} />
+                                <Input type="password" placeholder="Password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <Button className="w-full" type="submit">Sign in</Button>
+                {isLoading ? (
+                    <ButtonLoading />
+                ) : (
+                    <Button className="w-full" type="submit">Sign in</Button>
+                )}
             </form>
         </Form>
     );

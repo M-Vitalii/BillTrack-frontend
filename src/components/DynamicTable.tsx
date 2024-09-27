@@ -1,7 +1,7 @@
 import {
     Table,
     TableBody,
-    TableCaption,
+    TableCaption, TableCell,
     TableFooter,
     TableHead,
     TableHeader,
@@ -34,9 +34,17 @@ export function DynamicTable<T>({
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map((item, index) => (
-                    <TableRow key={index}>{renderRow(item)}</TableRow>
-                ))}
+                {data.length === 0 ? (
+                    <TableRow>
+                        <TableCell colSpan={headers.length} className="text-center">
+                            No data available
+                        </TableCell>
+                    </TableRow>
+                ) : (
+                    data.map((item, index) => (
+                        <TableRow key={index}>{renderRow(item)}</TableRow>
+                    ))
+                )}
             </TableBody>
             {footer && <TableFooter className="p-5">{footer}</TableFooter>}
         </Table>

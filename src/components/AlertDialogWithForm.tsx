@@ -45,7 +45,7 @@ export function AlertDialogForm<T extends z.ZodType<any, any>>({
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="outline">{triggerText}</Button>
+                <Button variant="secondary">{triggerText}</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>

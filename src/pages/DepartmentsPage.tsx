@@ -1,67 +1,63 @@
-import { useEffect, useState } from 'react';
-import {Department, DepartmentPage} from "@/features/department/models/department-model.ts";
-import DepartmentService from "@/features/department/services/department-service.ts";
-import { AddDepartmentDialog } from "@/features/department/components/AddDepartmentDialog.tsx";
+import { Department } from "@/features/department/models/department.ts";
+import { AddEditNamedItemDialog } from "@/components/AddEditNamedItemDialog.tsx";
 import { DynamicTable } from "@/components/DynamicTable.tsx";
-import {TableCell, TableFooter, TableRow} from "@/components/ui/table.tsx";
-import {Button} from "@/components/ui/button.tsx";
+import { TableCell } from "@/components/ui/table.tsx";
+import { PaginationComponent } from "@/components/PaginationComponent.tsx";
+import { useDepartments } from "@/features/department/hooks/use-departments.ts";
+import { Button } from "@/components/ui/button.tsx";
 
 export function DepartmentsPage() {
-    const [departments, setDepartments] = useState<DepartmentPage>({items: [], page: 0, pageSize: 0});
-    const [pageNumber, setPageNumber] = useState<number>(1);
-    const [pageSize] = useState<number>(10); // Adjust as needed
-
-    useEffect(() => {
-        const fetchDepartments = async () => {
-            try {
-                const response = await DepartmentService.getDepartments(pageNumber);
-                setDepartments(response); // Assuming response structure matches your data
-            } catch (error) {
-                console.error('Failed to fetch departments', error);
-            }
-        };
-
-        fetchDepartments();
-    }, [pageNumber, pageSize]);
-
-    const handlePageChange = (newPageNumber: number) => {
-        if (newPageNumber > 0) {
-            setPageNumber(newPageNumber);
-        }
-    };
+    const {
+        departments,
+        page,
+        pageSize,
+        handlePageChange,
+        handlePageSizeChange,
+        handleAddDepartment,
+        handleEditDepartment,
+        handleDeleteDepartment,
+    } = useDepartments();
 
     return (
         <div>
             <div className='grid justify-items-center mt-5'>
-                <AddDepartmentDialog />
+                <AddEditNamedItemDialog
+                    itemName="Department"
+                    onSubmit={handleAddDepartment}
+                    isEditing={false}
+                />
+                <div className="py-10">
+                    <PaginationComponent
+                        currentPage={page}
+                        pageSize={pageSize}
+                        onPageChange={handlePageChange}
+                        onPageSizeChange={handlePageSizeChange}
+                    />
+                </div>
                 <DynamicTable
-                    caption="A list of departments"
-                    headers={["ID", "Name"]}
-                    data={departments.items} // Pass data as an object with `items`
+                    headers={["ID", "Name", "Actions"]}
+                    data={departments.items}
                     renderRow={(department: Department) => (
                         <>
                             <TableCell className="font-medium text-left">{department.id}</TableCell>
                             <TableCell className="text-left">{department.name}</TableCell>
+                            <TableCell className="text-left">
+                                <AddEditNamedItemDialog
+                                    itemName="Department"
+                                    onSubmit={(values) => handleEditDepartment(department.id!, values)}
+                                    initialValues={{ name: department.name }}
+                                    isEditing={true}
+                                />
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => handleDeleteDepartment(department.id!)}
+                                    className="ml-2"
+                                >
+                                    Delete
+                                </Button>
+                            </TableCell>
                         </>
                     )}
-                    footer={
-                        <TableRow>
-                            <TableCell colSpan={2}>
-                                <div className="flex justify-between items-center">
-                                    <Button
-                                        disabled={pageNumber === 1}
-                                        onClick={() => handlePageChange(pageNumber - 1)}>
-                                        Previous
-                                    </Button>
-                                    <span>Page {pageNumber}</span>
-                                    <Button
-                                        onClick={() => handlePageChange(pageNumber + 1)}>
-                                        Next
-                                    </Button>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    }
                 />
             </div>
         </div>

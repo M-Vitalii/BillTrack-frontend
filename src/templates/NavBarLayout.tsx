@@ -6,6 +6,7 @@ import {AppDispatch, RootState} from "@/redux/store.ts";
 import {logout} from "@/redux/auth/auth-thunks.ts";
 import {useEffect} from "react";
 import {Button} from "@/components/ui/button.tsx";
+import { Toaster } from "@/components/ui/toaster";
 
 export function NavBarLayout() {
     const dispatch = useDispatch<AppDispatch>();
@@ -39,6 +40,7 @@ export function NavBarLayout() {
             <div>
                 <Outlet/>
             </div>
+            <Toaster />
         </div>
     );
 }
