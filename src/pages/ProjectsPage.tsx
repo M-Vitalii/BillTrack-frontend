@@ -3,20 +3,13 @@ import {DynamicTable} from "@/components/DynamicTable.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import {PaginationComponent} from "@/components/PaginationComponent.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {useProjects} from "@/features/projects/hooks/use-projects.ts";
 import {Project} from "@/features/projects/models";
+import {useProjectsData} from "@/features/projects/hooks/use-projects-data.ts";
+import {useProjectOperations} from "@/features/projects/hooks/use-projects-operations.ts";
 
 export function ProjectsPage() {
-    const {
-        projects,
-        page,
-        pageSize,
-        handlePageChange,
-        handlePageSizeChange,
-        handleAddProject,
-        handleEditProject,
-        handleDeleteProject,
-    } = useProjects();
+    const {projects, page, pageSize, handlePageChange, handlePageSizeChange, fetchProjects } = useProjectsData();
+    const {handleAddProject, handleEditProject, handleDeleteProject} = useProjectOperations(fetchProjects);
 
     return (
         <div>

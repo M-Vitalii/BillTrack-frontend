@@ -1,10 +1,11 @@
-import { Department } from "@/features/department/models/department.ts";
-import { AddEditNamedItemDialog } from "@/components/AddEditNamedItemDialog.tsx";
-import { DynamicTable } from "@/components/DynamicTable.tsx";
-import { TableCell } from "@/components/ui/table.tsx";
-import { PaginationComponent } from "@/components/PaginationComponent.tsx";
-import { useDepartments } from "@/features/department/hooks/use-departments.ts";
-import { Button } from "@/components/ui/button.tsx";
+import {Department} from "@/features/department/models/department.ts";
+import {AddEditNamedItemDialog} from "@/components/AddEditNamedItemDialog.tsx";
+import {DynamicTable} from "@/components/DynamicTable.tsx";
+import {TableCell} from "@/components/ui/table.tsx";
+import {PaginationComponent} from "@/components/PaginationComponent.tsx";
+import {useDepartmentsData} from "@/features/department/hooks/use-departments-data.ts";
+import {Button} from "@/components/ui/button.tsx";
+import {useDepartmentsOperations} from "@/features/department/hooks/use-departments-operations.ts";
 
 export function DepartmentsPage() {
     const {
@@ -13,10 +14,14 @@ export function DepartmentsPage() {
         pageSize,
         handlePageChange,
         handlePageSizeChange,
+        fetchDepartments
+    } = useDepartmentsData();
+
+    const {
         handleAddDepartment,
         handleEditDepartment,
-        handleDeleteDepartment,
-    } = useDepartments();
+        handleDeleteDepartment
+    } = useDepartmentsOperations(fetchDepartments);
 
     return (
         <div>
@@ -45,7 +50,7 @@ export function DepartmentsPage() {
                                 <AddEditNamedItemDialog
                                     itemName="Department"
                                     onSubmit={(values) => handleEditDepartment(department.id!, values)}
-                                    initialValues={{ name: department.name }}
+                                    initialValues={{name: department.name}}
                                     isEditing={true}
                                 />
                                 <Button
