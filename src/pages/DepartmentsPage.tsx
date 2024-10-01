@@ -3,32 +3,27 @@ import {AddEditNamedItemDialog} from "@/components/AddEditNamedItemDialog.tsx";
 import {DynamicTable} from "@/components/DynamicTable.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import {PaginationComponent} from "@/components/PaginationComponent.tsx";
-import {useDepartmentsData} from "@/features/department/hooks/use-departments-data.ts";
+import {useDepartments} from "@/features/department/hooks/use-departments.ts";
 import {Button} from "@/components/ui/button.tsx";
-import {useDepartmentsOperations} from "@/features/department/hooks/use-departments-operations.ts";
 
 export function DepartmentsPage() {
     const {
-        departments,
+        entities,
         page,
         pageSize,
         handlePageChange,
         handlePageSizeChange,
-        fetchDepartments
-    } = useDepartmentsData();
-
-    const {
-        handleAddDepartment,
-        handleEditDepartment,
-        handleDeleteDepartment
-    } = useDepartmentsOperations(fetchDepartments);
+        handleAdd,
+        handleEdit,
+        handleDelete
+    } = useDepartments();
 
     return (
         <div>
             <div className='grid justify-items-center mt-5'>
                 <AddEditNamedItemDialog
                     itemName="Department"
-                    onSubmit={handleAddDepartment}
+                    onSubmit={handleAdd}
                     isEditing={false}
                 />
                 <div className="py-10">
@@ -41,7 +36,7 @@ export function DepartmentsPage() {
                 </div>
                 <DynamicTable
                     headers={["ID", "Name", "Actions"]}
-                    data={departments.items}
+                    data={entities.items}
                     renderRow={(department: Department) => (
                         <>
                             <TableCell className="font-medium text-left">{department.id}</TableCell>
@@ -49,13 +44,13 @@ export function DepartmentsPage() {
                             <TableCell className="text-left">
                                 <AddEditNamedItemDialog
                                     itemName="Department"
-                                    onSubmit={(values) => handleEditDepartment(department.id!, values)}
+                                    onSubmit={(values) => handleEdit(department.id!, values)}
                                     initialValues={{name: department.name}}
                                     isEditing={true}
                                 />
                                 <Button
                                     variant="destructive"
-                                    onClick={() => handleDeleteDepartment(department.id!)}
+                                    onClick={() => handleDelete(department.id!)}
                                     className="ml-2"
                                 >
                                     Delete

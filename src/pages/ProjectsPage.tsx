@@ -4,19 +4,26 @@ import {TableCell} from "@/components/ui/table.tsx";
 import {PaginationComponent} from "@/components/PaginationComponent.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Project} from "@/features/projects/models";
-import {useProjectsData} from "@/features/projects/hooks/use-projects-data.ts";
-import {useProjectOperations} from "@/features/projects/hooks/use-projects-operations.ts";
+import {useProjects} from "@/features/projects/hooks/use-projects.ts";
 
 export function ProjectsPage() {
-    const {projects, page, pageSize, handlePageChange, handlePageSizeChange, fetchProjects } = useProjectsData();
-    const {handleAddProject, handleEditProject, handleDeleteProject} = useProjectOperations(fetchProjects);
+    const {
+        entities,
+        page,
+        pageSize,
+        handlePageChange,
+        handlePageSizeChange,
+        handleAdd,
+        handleEdit,
+        handleDelete,
+    } = useProjects();
 
     return (
         <div>
             <div className='grid justify-items-center mt-5'>
                 <AddEditNamedItemDialog
                     itemName="Project"
-                    onSubmit={handleAddProject}
+                    onSubmit={handleAdd}
                     isEditing={false}
                 />
                 <div className="py-10">
@@ -29,7 +36,7 @@ export function ProjectsPage() {
                 </div>
                 <DynamicTable
                     headers={["ID", "Name", "Actions"]}
-                    data={projects.items}
+                    data={entities.items}
                     renderRow={(project: Project) => (
                         <>
                             <TableCell className="font-medium text-left">{project.id}</TableCell>
@@ -37,13 +44,13 @@ export function ProjectsPage() {
                             <TableCell className="text-left">
                                 <AddEditNamedItemDialog
                                     itemName="Project"
-                                    onSubmit={(values) => handleEditProject(project.id!, values)}
-                                    initialValues={{ name: project.name }}
+                                    onSubmit={(values) => handleEdit(project.id!, values)}
+                                    initialValues={{name: project.name}}
                                     isEditing={true}
                                 />
                                 <Button
                                     variant="destructive"
-                                    onClick={() => handleDeleteProject(project.id!)}
+                                    onClick={() => handleDelete(project.id!)}
                                     className="ml-2"
                                 >
                                     Delete
