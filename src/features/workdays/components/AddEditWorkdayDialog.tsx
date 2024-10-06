@@ -1,7 +1,7 @@
 import { format, parse } from "date-fns";
 import { z } from "zod";
 import { CalendarIcon } from "lucide-react";
-import { AlertDialogForm } from "@/components/AlertDialogWithForm.tsx";
+import { AlertDialogForm } from "@/components/dialog/AlertDialogWithForm.tsx";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button";
@@ -9,19 +9,23 @@ import { workdaySchema } from "@/features/workdays/schemas/workday-schema.ts";
 import { Workday } from "@/features/workdays/models/workday.ts";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { Calendar } from "@/components/ui/calendar.tsx";
+import {Employee} from "@/features/employee/models/employee.ts";
+import {SelectEmployee} from "@/components/select/SelectEmployee.tsx";
 
 interface AddEditWorkdayDialogProps {
     itemName?: string;
     onSubmit: (values: z.infer<typeof workdaySchema>) => void;
     initialValues?: Workday;
     isEditing: boolean;
+    employees: Employee[];
 }
 
 export function AddEditWorkdayDialog({
     itemName = 'Workday',
     onSubmit,
     initialValues,
-    isEditing
+    isEditing,
+    employees
 }: AddEditWorkdayDialogProps) {
     return (
         <AlertDialogForm
@@ -46,7 +50,7 @@ export function AddEditWorkdayDialog({
                                         <FormControl>
                                             <Button
                                                 variant={"outline"}
-                                                className="w-[240px] pl-3 text-left font-normal"
+                                                className="w-full pl-3 text-left font-normal"
                                             >
                                                 {field.value ? format(parse(field.value, 'yyyy-MM-dd', new Date()), "PPP") : "Pick a date"}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -86,7 +90,11 @@ export function AddEditWorkdayDialog({
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Employee ID" {...field} />
+                                    <SelectEmployee
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                        employees={employees}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

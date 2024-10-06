@@ -1,11 +1,15 @@
-import {AlertDialogReadOnly} from "@/components/AlertDialogReadOnly";
-import {DynamicTable} from "@/components/DynamicTable";
+import {AlertDialogReadOnly} from "@/components/dialog/AlertDialogReadOnly.tsx";
+import {DynamicTable} from "@/components/table/DynamicTable.tsx";
 import {TableCell} from "@/components/ui/table";
 import {PaginationComponent} from "@/components/PaginationComponent";
-import {Button} from "@/components/ui/button";
 import {useEmployees} from "@/features/employee/hooks/use-employees.ts";
 import {Employee} from "@/features/employee/models/employee.ts";
 import {AddEditEmployeeDialog} from "@/features/employee/components/AddEditEmployeeDialog.tsx";
+import {SelectSortOrder} from "@/components/select/SelectSortOrder.tsx";
+import {DeleteButton} from "@/components/button/DeleteButton.tsx";
+import {DepartmentCombobox} from "@/components/combobox/DepartmentCombobox.tsx";
+import {ProjectCombobox} from "@/components/combobox/ProjectCombobox.tsx";
+import {InputWithLabel} from "@/components/input/InputWithLabel.tsx";
 
 export function EmployeesPage() {
     const {
@@ -17,6 +21,8 @@ export function EmployeesPage() {
         handleAdd,
         handleEdit,
         handleDelete,
+        updateQueryParams,
+        isDeletingEntity,
     } = useEmployees();
 
     return (
@@ -34,6 +40,24 @@ export function EmployeesPage() {
                         onPageSizeChange={handlePageSizeChange}
                     />
                 </div>
+                <div className="py-10 w-full flex justify-between">
+                    <div className="flex flex-row space-x-4">
+                        <DepartmentCombobox labelText="Filter by departments"
+                                          onSelect={(e) => updateQueryParams({filterByDepartment: e})}/>
+                        <ProjectCombobox labelText="Filter by projects"
+                                          onSelect={(e) => updateQueryParams({filterByProject: e})}/>
+                        <InputWithLabel
+                            labelText="Filter by Employee full name"
+                            id="employeeFilter"
+                            placeholder="Enter employee full name"
+                            onChange={(e) => updateQueryParams({ filterByEmployeeName: e.target.value })}
+                        />
+                    </div>
+                    <div className="max-w-xl">
+                        <SelectSortOrder labelText="Sort by last name"
+                                         onValueChange={(e) => updateQueryParams({sortByName: e})}/>
+                    </div>
+                </div>
                 <DynamicTable
                     headers={["Name", "Email", "Salary", "Actions"]}
                     data={entities.items}
@@ -43,7 +67,7 @@ export function EmployeesPage() {
                                 className="text-left flex-1">{`${employee.firstname || ''} ${employee.lastname || ''}`}</TableCell>
                             <TableCell className="text-left">{employee.email || 'N/A'}</TableCell>
                             <TableCell className="text-left">${employee.salary || 'N/A'}</TableCell>
-                            <TableCell className="text-left space-x-5">
+                            <TableCell className="text-right space-x-5">
                                 <AlertDialogReadOnly
                                     triggerText="View Details"
                                     title="Employee Information"
@@ -53,8 +77,8 @@ export function EmployeesPage() {
                                         {label: "Last Name", value: employee.lastname || "N/A"},
                                         {label: "Email", value: employee.email || "N/A"},
                                         {label: "Salary", value: `${employee.salary.toFixed(2)}`},
-                                        {label: "Department ID", value: employee.departmentId || "N/A"},
-                                        {label: "Project ID", value: employee.projectId || "N/A"},
+                                        {label: "Department", value: employee.department.name || "N/A"},
+                                        {label: "Project", value: employee.project.name || "N/A"},
                                     ]}
                                 />
                                 <AddEditEmployeeDialog
@@ -63,13 +87,10 @@ export function EmployeesPage() {
                                     initialValues={employee}
                                     isEditing={true}
                                 />
-                                <Button
-                                    variant="destructive"
-                                    onClick={() => employee.id && handleDelete(employee.id!)}
-                                    className="ml-2"
-                                >
-                                    Delete
-                                </Button>
+                                <DeleteButton
+                                    onDelete={() => handleDelete(employee.id!)}
+                                    isDeleting={isDeletingEntity(employee.id!)}
+                                />
                             </TableCell>
                         </>
                     )}

@@ -1,10 +1,12 @@
 import {Department} from "@/features/department/models/department.ts";
-import {AddEditNamedItemDialog} from "@/components/AddEditNamedItemDialog.tsx";
-import {DynamicTable} from "@/components/DynamicTable.tsx";
+import {AddEditNamedItemDialog} from "@/components/dialog/AddEditNamedItemDialog.tsx";
+import {DynamicTable} from "@/components/table/DynamicTable.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import {PaginationComponent} from "@/components/PaginationComponent.tsx";
 import {useDepartments} from "@/features/department/hooks/use-departments.ts";
-import {Button} from "@/components/ui/button.tsx";
+import {DeleteButton} from "@/components/button/DeleteButton.tsx";
+import {InputWithLabel} from "@/components/input/InputWithLabel.tsx";
+import {SelectSortOrder} from "@/components/select/SelectSortOrder.tsx";
 
 export function DepartmentsPage() {
     const {
@@ -15,7 +17,9 @@ export function DepartmentsPage() {
         handlePageSizeChange,
         handleAdd,
         handleEdit,
-        handleDelete
+        handleDelete,
+        updateQueryParams,
+        isDeletingEntity
     } = useDepartments();
 
     return (
@@ -34,27 +38,34 @@ export function DepartmentsPage() {
                         onPageSizeChange={handlePageSizeChange}
                     />
                 </div>
+                <div className="py-10 w-full flex justify-between">
+                    <InputWithLabel
+                        labelText="Filter by Department Name"
+                        id="departmentFilter"
+                        placeholder="Enter department name"
+                        onChange={(e) => updateQueryParams({ filterByName: e.target.value })}
+                    />
+                    <div className="max-w-xl">
+                        <SelectSortOrder labelText="Sort by name" onValueChange={(e) => updateQueryParams({sortByName: e})}/>
+                    </div>
+                </div>
                 <DynamicTable
-                    headers={["ID", "Name", "Actions"]}
+                    headers={["Name", "Actions"]}
                     data={entities.items}
                     renderRow={(department: Department) => (
                         <>
-                            <TableCell className="font-medium text-left">{department.id}</TableCell>
                             <TableCell className="text-left">{department.name}</TableCell>
-                            <TableCell className="text-left">
+                            <TableCell className="text-right">
                                 <AddEditNamedItemDialog
                                     itemName="Department"
                                     onSubmit={(values) => handleEdit(department.id!, values)}
-                                    initialValues={{name: department.name}}
+                                    initialValues={{ name: department.name }}
                                     isEditing={true}
                                 />
-                                <Button
-                                    variant="destructive"
-                                    onClick={() => handleDelete(department.id!)}
-                                    className="ml-2"
-                                >
-                                    Delete
-                                </Button>
+                                <DeleteButton
+                                    onDelete={() => handleDelete(department.id!)}
+                                    isDeleting={isDeletingEntity(department.id!)}
+                                />
                             </TableCell>
                         </>
                     )}

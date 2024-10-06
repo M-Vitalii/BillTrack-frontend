@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AlertDialogForm } from "@/components/AlertDialogWithForm.tsx";
+import { AlertDialogForm } from "@/components/dialog/AlertDialogWithForm.tsx";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { createNamedItemSchema, NamedItemSchema } from "@/shared/schemas/named-item-schema.ts";

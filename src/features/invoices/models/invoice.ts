@@ -1,7 +1,9 @@
+import {Employee} from "@/features/employee/models/employee.ts";
+
 export interface Invoice {
     id?: string;
     month: number;
     year: number;
-    employeeId: string;
+    employee: Employee;
     invoiceUrl?: string;
 }

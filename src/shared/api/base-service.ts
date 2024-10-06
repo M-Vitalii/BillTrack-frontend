@@ -10,10 +10,14 @@ export interface Page<T> {
 export class BaseService<T> {
     constructor(private readonly endpoint: string) {}
 
-    public async getAll(pageNumber: number = 1, pageSize: number = 10): Promise<Page<T>> {
+    public async getAll(pageNumber: number = 1, pageSize: number = 10, queryParams?: Record<string, any>): Promise<Page<T>> {
         try {
             const response: AxiosResponse<Page<T>> = await api.get(this.endpoint, {
-                params: { page: pageNumber, pageSize }
+                params: {
+                    page: pageNumber,
+                    pageSize,
+                    ...queryParams,
+                },
             });
             console.log(`Fetched ${this.endpoint}:`, response.data);
             return response.data;
@@ -22,6 +26,7 @@ export class BaseService<T> {
             throw error;
         }
     }
+
 
     public async getById(id: string): Promise<T> {
         try {

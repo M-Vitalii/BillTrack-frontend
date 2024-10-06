@@ -7,12 +7,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
+} from "@/components/ui/alert-dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Control, useForm} from "react-hook-form";
 import {z} from "zod";
-import {Form} from "@/components/ui/form";
+import {Form} from "@/components/ui/form.tsx";
 
 interface AlertDialogFormProps<T extends z.ZodType<any, any>> {
     triggerText: string;

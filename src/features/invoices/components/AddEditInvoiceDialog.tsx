@@ -1,9 +1,10 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { AlertDialogForm } from "@/components/AlertDialogWithForm.tsx";
-import { InvoiceSchema, invoiceSchema } from "@/features/invoices/schemas/invoice-schema.ts";
-import { Invoice } from "@/features/invoices/models/invoice.ts";
-import { SelectMonth } from "@/components/SelectMonth";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {AlertDialogForm} from "@/components/dialog/AlertDialogWithForm.tsx";
+import {InvoiceSchema, invoiceSchema} from "@/features/invoices/schemas/invoice-schema.ts";
+import {Invoice} from "@/features/invoices/models/invoice.ts";
+import {SelectMonth} from "@/components/select/SelectMonth.tsx";
+import {SelectEmployee} from "@/components/select/SelectEmployee.tsx";
 
 interface AddEditInvoiceDialogProps {
     itemName?: string;
@@ -13,11 +14,11 @@ interface AddEditInvoiceDialogProps {
 }
 
 export function AddEditInvoiceDialog({
-                                         itemName = 'Invoice',
-                                         onSubmit,
-                                         initialValues,
-                                         isEditing
-                                     }: AddEditInvoiceDialogProps) {
+    itemName = 'Invoice',
+    onSubmit,
+    initialValues,
+    isEditing,
+}: AddEditInvoiceDialogProps) {
     return (
         <AlertDialogForm
             triggerText={isEditing ? `Edit ${itemName}` : `Add ${itemName}`}
@@ -71,9 +72,12 @@ export function AddEditInvoiceDialog({
                         name="employeeId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Employee ID</FormLabel>
+                                <FormLabel>Employee</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <SelectEmployee
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

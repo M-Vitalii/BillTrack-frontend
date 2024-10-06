@@ -12,14 +12,15 @@ export const useInvoices = () => {
         handlePageSizeChange,
         handleAdd,
         handleEdit,
+        updateQueryParams,
+        isDeletingEntity,
         handleDelete,
     } = useEntityData<Invoice, typeof invoiceSchema>(InvoiceService, 'Invoice');
 
-    // Function to handle invoice download by URL
     const downloadInvoice = (url: string) => {
         const link = document.createElement('a');
         link.href = url;
-        link.download = ''; // Let the browser decide the filename, or you can set a custom name here
+        link.download = '';
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -34,6 +35,8 @@ export const useInvoices = () => {
         handleAdd,
         handleEdit,
         handleDelete,
+        updateQueryParams,
+        isDeletingEntity,
         downloadInvoice,
     };
 };
