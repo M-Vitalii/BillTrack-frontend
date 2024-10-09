@@ -6,7 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table.tsx";
 
 interface DynamicTableProps<T> {
     caption?: string;
@@ -29,7 +29,12 @@ export function DynamicTable<T>({
             <TableHeader>
                 <TableRow>
                     {headers.map((header, index) => (
-                        <TableHead key={index}>{header}</TableHead>
+                        <TableHead
+                            key={index}
+                            className={index === headers.length - 1 ? "text-right" : ""}
+                        >
+                            {header}
+                        </TableHead>
                     ))}
                 </TableRow>
             </TableHeader>

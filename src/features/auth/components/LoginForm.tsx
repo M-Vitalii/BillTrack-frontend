@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/features/auth/validations/login-form-schema";
 import { LoginCredentials } from "@/shared/interfaces";
-import {ButtonLoading} from "@/components/ButtonLoading.tsx";
+import {ButtonLoading} from "@/components/button/ButtonLoading.tsx";
 
 interface LoginFormProps {
     onSubmit: (credentials: LoginCredentials) => void;

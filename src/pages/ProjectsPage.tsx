@@ -1,22 +1,33 @@
-import {AddEditNamedItemDialog} from "@/components/AddEditNamedItemDialog.tsx";
-import {DynamicTable} from "@/components/DynamicTable.tsx";
+import {AddEditNamedItemDialog} from "@/components/dialog/AddEditNamedItemDialog.tsx";
+import {DynamicTable} from "@/components/table/DynamicTable.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import {PaginationComponent} from "@/components/PaginationComponent.tsx";
-import {Button} from "@/components/ui/button.tsx";
 import {Project} from "@/features/projects/models";
-import {useProjectsData} from "@/features/projects/hooks/use-projects-data.ts";
-import {useProjectOperations} from "@/features/projects/hooks/use-projects-operations.ts";
+import {useProjects} from "@/features/projects/hooks/use-projects.ts";
+import {InputWithLabel} from "@/components/input/InputWithLabel.tsx";
+import {SelectSortOrder} from "@/components/select/SelectSortOrder.tsx";
+import {DeleteButton} from "@/components/button/DeleteButton.tsx";
 
 export function ProjectsPage() {
-    const {projects, page, pageSize, handlePageChange, handlePageSizeChange, fetchProjects } = useProjectsData();
-    const {handleAddProject, handleEditProject, handleDeleteProject} = useProjectOperations(fetchProjects);
+    const {
+        entities,
+        page,
+        pageSize,
+        handlePageChange,
+        handlePageSizeChange,
+        handleAdd,
+        handleEdit,
+        handleDelete,
+        updateQueryParams,
+        isDeletingEntity
+    } = useProjects();
 
     return (
         <div>
             <div className='grid justify-items-center mt-5'>
                 <AddEditNamedItemDialog
                     itemName="Project"
-                    onSubmit={handleAddProject}
+                    onSubmit={handleAdd}
                     isEditing={false}
                 />
                 <div className="py-10">
@@ -27,27 +38,35 @@ export function ProjectsPage() {
                         onPageSizeChange={handlePageSizeChange}
                     />
                 </div>
+                <div className="py-10 w-full flex justify-between">
+                    <InputWithLabel
+                        labelText="Filter by Project Name"
+                        id="projectFilter"
+                        placeholder="Enter Project name"
+                        onChange={(e) => updateQueryParams({filterByName: e.target.value})}
+                    />
+                    <div className="max-w-xl">
+                        <SelectSortOrder labelText="Sort by name"
+                                         onValueChange={(e) => updateQueryParams({sortByName: e})}/>
+                    </div>
+                </div>
                 <DynamicTable
-                    headers={["ID", "Name", "Actions"]}
-                    data={projects.items}
+                    headers={["Name", "Actions"]}
+                    data={entities.items}
                     renderRow={(project: Project) => (
                         <>
-                            <TableCell className="font-medium text-left">{project.id}</TableCell>
                             <TableCell className="text-left">{project.name}</TableCell>
-                            <TableCell className="text-left">
+                            <TableCell className="text-right">
                                 <AddEditNamedItemDialog
                                     itemName="Project"
-                                    onSubmit={(values) => handleEditProject(project.id!, values)}
-                                    initialValues={{ name: project.name }}
+                                    onSubmit={(values) => handleEdit(project.id!, values)}
+                                    initialValues={{name: project.name}}
                                     isEditing={true}
                                 />
-                                <Button
-                                    variant="destructive"
-                                    onClick={() => handleDeleteProject(project.id!)}
-                                    className="ml-2"
-                                >
-                                    Delete
-                                </Button>
+                                <DeleteButton
+                                    onDelete={() => handleDelete(project.id!)}
+                                    isDeleting={isDeletingEntity(project.id!)}
+                                />
                             </TableCell>
                         </>
                     )}

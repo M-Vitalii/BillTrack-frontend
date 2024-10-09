@@ -1,5 +1,5 @@
 import {Loader} from "lucide-react";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 
 export function LoadingAlert() {
     return (
