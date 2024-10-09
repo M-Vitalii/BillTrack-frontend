@@ -20,7 +20,6 @@ export function WorkdaysPage() {
         handleAdd,
         handleEdit,
         handleDelete,
-        isDeletingEntity,
         updateQueryParams
     } = useWorkdays();
 
@@ -78,7 +77,6 @@ export function WorkdaysPage() {
                                 />
                                 <DeleteButton
                                     onDelete={() => handleDelete(workday.id!)}
-                                    isDeleting={isDeletingEntity(workday.id!)}
                                 />
                             </TableCell>
                         </>

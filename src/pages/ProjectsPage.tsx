@@ -19,7 +19,6 @@ export function ProjectsPage() {
         handleEdit,
         handleDelete,
         updateQueryParams,
-        isDeletingEntity
     } = useProjects();
 
     return (
@@ -65,7 +64,6 @@ export function ProjectsPage() {
                                 />
                                 <DeleteButton
                                     onDelete={() => handleDelete(project.id!)}
-                                    isDeleting={isDeletingEntity(project.id!)}
                                 />
                             </TableCell>
                         </>

@@ -22,7 +22,6 @@ export function EmployeesPage() {
         handleEdit,
         handleDelete,
         updateQueryParams,
-        isDeletingEntity,
     } = useEmployees();
 
     return (
@@ -89,7 +88,6 @@ export function EmployeesPage() {
                                 />
                                 <DeleteButton
                                     onDelete={() => handleDelete(employee.id!)}
-                                    isDeleting={isDeletingEntity(employee.id!)}
                                 />
                             </TableCell>
                         </>

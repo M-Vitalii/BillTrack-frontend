@@ -19,7 +19,6 @@ export function DepartmentsPage() {
         handleEdit,
         handleDelete,
         updateQueryParams,
-        isDeletingEntity
     } = useDepartments();
 
     return (
@@ -64,7 +63,6 @@ export function DepartmentsPage() {
                                 />
                                 <DeleteButton
                                     onDelete={() => handleDelete(department.id!)}
-                                    isDeleting={isDeletingEntity(department.id!)}
                                 />
                             </TableCell>
                         </>
