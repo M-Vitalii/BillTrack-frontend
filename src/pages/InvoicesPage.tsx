@@ -21,7 +21,6 @@ export function InvoicesPage() {
         handleEdit,
         handleDelete,
         updateQueryParams,
-        isDeletingEntity,
         downloadInvoice
     } = useInvoices();
 
@@ -83,7 +82,6 @@ export function InvoicesPage() {
                                 />
                                 <DeleteButton
                                     onDelete={() => handleDelete(invoice.id!)}
-                                    isDeleting={isDeletingEntity(invoice.id!)}
                                 />
                             </TableCell>
                         </>

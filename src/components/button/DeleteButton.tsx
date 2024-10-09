@@ -1,9 +1,9 @@
-import {Button} from "@/components/ui/button.tsx";
-import {ButtonLoading} from "@/components/button/ButtonLoading.tsx";
+import { useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
+import { ButtonLoading } from "@/components/button/ButtonLoading.tsx";
 
 interface DeleteButtonProps {
     onDelete: () => Promise<void>;
-    isDeleting: boolean;
     className?: string;
     deleteText?: string;
     loadingText?: string;
@@ -11,13 +11,19 @@ interface DeleteButtonProps {
 
 export function DeleteButton({
     onDelete,
-    isDeleting,
     className = "ml-2 w-24",
     deleteText = "Delete",
     loadingText = "Wait"
 }: DeleteButtonProps) {
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const handleClick = async () => {
-        await onDelete();
+        setIsDeleting(true);
+        try {
+            await onDelete();
+        } catch (error) {
+            setIsDeleting(false);
+        }
     };
 
     if (isDeleting) {
