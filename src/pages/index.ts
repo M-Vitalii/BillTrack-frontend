@@ -1,0 +1,7 @@
+export * from './EmployeesPage.tsx'
+export * from './InvoicesPage.tsx'
+export * from './LoginPage.tsx'
+export * from './HomePage.tsx'
+export * from './WorkdaysPage.tsx'
+export * from './DepartmentsPage.tsx'
+export * from './ProjectsPage.tsx'
