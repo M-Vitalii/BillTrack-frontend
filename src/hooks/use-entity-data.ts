@@ -15,33 +15,32 @@ interface EntityService<T> {
 export function useEntityData<T extends { id?: string }, S extends z.ZodType<any, any>>(
     entityService: EntityService<T>,
     entityName: string,
-    initialQueryParams: Record<string, any> = {}
+    initialPageNumber: number = 1,
+    initialPageSize: number = 10,
+    initialQueryParams: Record<string, any> = {},
 ) {
     const { page, pageSize, handlePageChange, handlePageSizeChange } = usePagination({
-        initialPage: 1,
-        initialPageSize: 10,
+        initialPage: initialPageNumber,
+        initialPageSize: initialPageSize,
     });
 
     const { toast } = useToast();
-    const [entities, setEntities] = useState<Page<T>>({ items: [], pageNumber: 1, pageSize: 10 });
+    const [entities, setEntities] = useState<Page<T>>({ items: [], pageNumber: initialPageNumber, pageSize: initialPageSize });
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
-    // Stable query params state
     const [queryParams, setQueryParams] = useState<Record<string, any>>(initialQueryParams);
     const [debouncedQueryParams, setDebouncedQueryParams] = useState<Record<string, any>>(initialQueryParams);
 
-    // Debouncing mechanism for query parameters
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedQueryParams(queryParams);
-        }, 1000); // Adjust the debounce delay as needed
+        }, 1000);
 
         return () => {
             clearTimeout(handler);
         };
     }, [queryParams]);
 
-    // Memoize fetchEntities to prevent it from being re-created unnecessarily
     const fetchEntities = useCallback(
         async (additionalQueryParams: Record<string, any> = {}) => {
             try {
@@ -55,7 +54,6 @@ export function useEntityData<T extends { id?: string }, S extends z.ZodType<any
         [page, pageSize, entityService, entityName, toast, debouncedQueryParams]
     );
 
-    // Set query params when filters or other params change
     const updateQueryParams = useCallback((newQueryParams: Record<string, any>) => {
         setQueryParams((prevParams) => ({
             ...prevParams,
@@ -64,7 +62,7 @@ export function useEntityData<T extends { id?: string }, S extends z.ZodType<any
     }, []);
 
     useEffect(() => {
-        fetchEntities(); // Fetch with debounced query params
+        fetchEntities();
     }, [fetchEntities]);
 
     const handleAdd = async (values: z.infer<S>) => {
@@ -114,7 +112,7 @@ export function useEntityData<T extends { id?: string }, S extends z.ZodType<any
         handlePageChange,
         handlePageSizeChange,
         fetchEntities,
-        updateQueryParams, // You can pass query params without worrying about debouncing in the component
+        updateQueryParams,
         handleAdd,
         handleEdit,
         handleDelete,

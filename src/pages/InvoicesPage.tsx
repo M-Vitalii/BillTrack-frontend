@@ -70,10 +70,10 @@ export function InvoicesPage() {
                                             value: `${invoice.employee.id?.substring(0, 4)}-${invoice.employee.firstname} ${invoice.employee.lastname}`.toString() || "N/A"
                                         },
                                     ]}
-                                    isActionVisible={!!invoice.invoiceUrl}
+                                    isActionVisible={invoice.isUrlReady}
                                     actionText="Download"
                                     actionIcon={Download}
-                                    onAction={() => downloadInvoice(invoice.invoiceUrl!)}
+                                    onAction={() => downloadInvoice(invoice.id!)}
                                 />
                                 <AddEditInvoiceDialog
                                     key={invoice.id}

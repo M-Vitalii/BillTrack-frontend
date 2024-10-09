@@ -5,5 +5,5 @@ export interface Invoice {
     month: number;
     year: number;
     employee: Employee;
-    invoiceUrl?: string;
+    isUrlReady?: boolean;
 }

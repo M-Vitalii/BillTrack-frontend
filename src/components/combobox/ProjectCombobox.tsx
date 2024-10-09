@@ -9,7 +9,7 @@ interface ProjectComboboxProps {
 }
 
 export const ProjectCombobox = ({onSelect, labelText}: ProjectComboboxProps) => {
-    const {entities: projects} = useProjects();
+    const {entities: projects} = useProjects(1, 1000);
     const [selectedProject, setSelectedProject] = useState<string | undefined>("");
 
     const items = projects.items.map(proj => ({

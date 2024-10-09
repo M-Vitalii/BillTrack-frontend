@@ -17,8 +17,10 @@ export const useInvoices = () => {
         handleDelete,
     } = useEntityData<Invoice, typeof invoiceSchema>(InvoiceService, 'Invoice');
 
-    const downloadInvoice = (url: string) => {
+    const downloadInvoice = async (id: string) => {
+        const url = await InvoiceService.getPreSignedUrl(id);
         const link = document.createElement('a');
+
         link.href = url;
         link.download = '';
         document.body.appendChild(link);

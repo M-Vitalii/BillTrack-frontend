@@ -9,7 +9,7 @@ interface DepartmentComboboxProps {
 }
 
 export const DepartmentCombobox = ({onSelect, labelText}: DepartmentComboboxProps) => {
-    const { entities: department } = useDepartments();
+    const { entities: department } = useDepartments(1, 1000);
     const [selectedDepartment, setSelectedDepartment] = useState<string | undefined>("");
 
     const items = department.items.map(dept => ({
